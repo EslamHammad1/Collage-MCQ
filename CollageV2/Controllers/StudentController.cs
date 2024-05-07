@@ -28,7 +28,7 @@ namespace SystemCollageV1.Controllers
             return Ok(students);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public async Task< IActionResult> GetStudentById(int id)
         {
             var student = await _studentService.GetById(id);
@@ -39,7 +39,6 @@ namespace SystemCollageV1.Controllers
             return Ok(student);
         }
         
-
         [HttpPost]
         public async Task <IActionResult> PostStudent([FromForm] StudentDTO stDTO)
         {
@@ -47,34 +46,18 @@ namespace SystemCollageV1.Controllers
             return Ok(Student);
         }
 
-        //[HttpPut("{id}")]
-        //public IActionResult UpdateStudent(int id, Student student)
-        //{
-        //    var existingStudent = _context.students.FirstOrDefault(s => s.S_Id == id);
-        //    if (existingStudent == null)
-        //    {
-        //        return NotFound("Student not found.");
-        //    }
+        [HttpPut("{id:int}")]
+        public async  Task<IActionResult> UpdateStudent(int id , [FromForm] StudentDTO stDTO)
+        {
+            var NewStudent = _studentService.UpdateStudent(id ,stDTO );
+            return Ok(NewStudent);
+        }
 
-        //    existingStudent.S_FullName = student.S_FullName;
-        //    // Update other properties as needed
-
-        //    _context.SaveChanges();
-        //    return Ok("Student updated successfully.");
-        //}
-
-        //[HttpDelete("{id}")]
-        //public IActionResult DeleteStudent(int id)
-        //{
-        //    var existingStudent = _context.students.FirstOrDefault(s => s.S_Id == id);
-        //    if (existingStudent == null)
-        //    {
-        //        return NotFound("Student not found.");
-        //    }
-
-        //    _context.students.Remove(existingStudent);
-        //    _context.SaveChanges();
-        //    return Ok("Student deleted successfully.");
-        //}
+       [HttpDelete("{id:int}")]
+       public async Task<IActionResult> DeleteStudent(int id)
+       {
+            var Student =await _studentService.DeleteStudent(id);
+           return Ok("Student deleted successfully.");
+       }
     }
 }

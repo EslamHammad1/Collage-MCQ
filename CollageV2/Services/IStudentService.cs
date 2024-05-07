@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CollageV2.Models;
+using Microsoft.AspNetCore.Mvc;
 using SystemCollageV1.DTO;
 
 namespace CollageV2.Services

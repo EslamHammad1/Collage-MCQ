@@ -33,6 +33,8 @@ namespace CollageV2.Services
         {
             if (string.IsNullOrEmpty(stDTO.Full_Name))
                 return new BadRequestObjectResult("Name is Required !");
+            if (stDTO.St_IDCode== null)
+                return new BadRequestObjectResult("IDCode is Required !");
             if (string.IsNullOrEmpty(stDTO.Department))
                 return new BadRequestObjectResult("Department is Required !");
             if (string.IsNullOrEmpty(stDTO.Level))
@@ -55,6 +57,7 @@ namespace CollageV2.Services
             var newStudent = new Student
             {
                 S_FullName = stDTO.Full_Name,
+                St_IDCode = stDTO.St_IDCode,
                 Department = stDTO.Department,
                 Level = stDTO.Level,
                 Email = stDTO.Email,
@@ -67,7 +70,7 @@ namespace CollageV2.Services
             return new OkObjectResult(newStudent);
         }
 
-        public async Task<IActionResult> UpdateStudent(int id, StudentDTO stDTO)
+        public async Task<IActionResult> UpdateStudent(int id,[FromForm] StudentDTO stDTO)
         {
             var existingStudent = await _context.students.FindAsync(id);
             if (existingStudent == null)
@@ -76,7 +79,8 @@ namespace CollageV2.Services
             // Update student properties if provided in the DTO
             if (!string.IsNullOrEmpty(stDTO.Full_Name))
                 existingStudent.S_FullName = stDTO.Full_Name;
-    
+            //if (stDTO.code!=null)
+            //    existingStudent.St_IDCode = stDTO.St_IDCode;
             if (!string.IsNullOrEmpty(stDTO.Department))
                 existingStudent.Department = stDTO.Department;
             if (!string.IsNullOrEmpty(stDTO.Level))
@@ -96,13 +100,12 @@ namespace CollageV2.Services
                     existingStudent.Image = dataStream.ToArray();
                 }
             }
+            existingStudent.St_IDCode = stDTO.St_IDCode;
 
             await _context.SaveChangesAsync();
 
             return new OkObjectResult(existingStudent);
         }
-
-
         public async Task<IActionResult> DeleteStudent(int id)
         {
             var existingStudent = await _context.students.FindAsync(id);
@@ -112,9 +115,7 @@ namespace CollageV2.Services
             _context.students.Remove(existingStudent);
             await _context.SaveChangesAsync();
 
-            return new OkResult();
+            return new OkObjectResult(existingStudent);
         }
-
-        
     }
 }
